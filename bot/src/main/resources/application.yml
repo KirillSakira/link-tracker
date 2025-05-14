@@ -1,0 +1,54 @@
+app:
+  telegram-token: ${TELEGRAM_TOKEN}
+  topicName: bot-updates
+  badResponseTopicName: bot-updates_dlq
+
+spring:
+  application:
+    name: macbeth_link_tracker_bot
+  jackson:
+    time-zone: UTC
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: bot-messages
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  port: 8090
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+api:
+  scrapper:
+    defaultUrl: http://localhost:8080
+    backoffType: CONSTANT
+    retryCount: 3
+    retryInterval: 1
+    statuses: INTERNAL_SERVER_ERROR, BAD_GATEWAY, INSUFFICIENT_STORAGE, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+
+bucket:
+  queryCount: 15
+
+management:
+  server:
+    port: 8091
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info
+      path-mapping:
+        prometheus: metrics
+      base-path: /
+  metrics:
+    tags:
+      application: ${spring.application.name}
