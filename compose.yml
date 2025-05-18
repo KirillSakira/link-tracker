@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgresql:/var/lib/postgresql/data
+      - ./postgresql:/var/lib/postgresql/data
     networks:
       - backend
 
@@ -62,7 +62,7 @@ services:
       KAFKA_JMX_PORT: 9997
       KAFKA_JMX_HOSTNAME: kafka
     volumes:
-      - kafka_data:/var/lib/kafka/data
+      - ./kafka_data:/var/lib/kafka/data
 
   prometheus:
     image: prom/prometheus:latest
